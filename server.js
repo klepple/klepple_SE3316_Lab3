@@ -8,7 +8,7 @@ var app = express();  // define our app using express
 var bodyParser = require('body-parser');  // configure app to use bodyParser()
 
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/dolphins'); // connect to our database
+mongoose.connect('mongodb://localhost:27017/dolphins', { useMongoClient: true}); // connect to our database
 
 var Dolphin = require('./dolphin.js');
 
