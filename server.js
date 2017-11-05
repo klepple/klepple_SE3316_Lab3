@@ -8,7 +8,7 @@ var app = express();  // define our app using express
 var bodyParser = require('body-parser');  // configure app to use bodyParser()
 
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/messageBoard'); // connect to our database
+mongoose.connect('mongodb://localhost:27017/messageBoard', { useMongoClient: true}); // connect to our database
 
 var Message = require('./message.js');
 
@@ -16,7 +16,7 @@ var Message = require('./message.js');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080; // set our port
+var port = 8081; // set our port
 
 // ------------------ ROUTES FOR OUR API ---------------------
 
@@ -56,7 +56,7 @@ router.route('/messages')
 
     })
     
-    // get all the messages (accessed at GET http://localhost:8080/api/messages)
+    // get all the messages (accessed at GET http://localhost:8081/api/messages)
     .get(function(req, res) {
         Message.find(function(err, messages) {
             if (err) {
