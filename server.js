@@ -8,7 +8,7 @@ var app = express();  // define our app using express
 var bodyParser = require('body-parser');  // configure app to use bodyParser()
 
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/messageBoard', { useMongoClient: true}); // connect to our database
+mongoose.connect('mongodb://localhost:28017/messageBoard', { useMongoClient: true}); // connect to our database
 
 var Message = require('./message.js');
 
@@ -21,6 +21,9 @@ var port = 8081; // set our port
 // ------------------ ROUTES FOR OUR API ---------------------
 
 var router = express.Router();  // get an instance of the express Router
+
+// serve files in static' folder at root URL '/'
+app.use('/', express.static('8081'));
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -42,15 +45,16 @@ router.route('/messages')
 
         var message = new Message(); // create a new instance of the Message model
         message.courseCode = req.body.courseCode; // set the courseCode
-        message.content = req.body.content;
-        message.timeStamp;
-
+        message.content = req.body.content; //set the content
+        message.timeStamp = req.body.timeStamp; //set the timeStamp
+        //Set header to avoid CORS error
+        res.setHeader("Access-Control-Allow-Origin", "*");
         // save the message and check for errors
         message.save(function(err) {
             if (err) {
                 res.send(err);
             }
-
+            console.log("message created!");
             res.json({ message: 'Message successfully created!' });
         });
 
@@ -58,11 +62,13 @@ router.route('/messages')
     
     // get all the messages (accessed at GET http://localhost:8081/api/messages)
     .get(function(req, res) {
+         //Set header to avoid CORS error
+        res.setHeader("Access-Control-Allow-Origin", "*");
         Message.find(function(err, messages) {
             if (err) {
                 res.send(err);
             }
-
+            console.log("got all messages");
             res.json(messages);
         });
     });
