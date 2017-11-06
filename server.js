@@ -16,7 +16,7 @@ var Message = require('./message.js');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = 8081; // set our port
+var port = 8082; // set our port
 
 // ------------------ ROUTES FOR OUR API ---------------------
 
@@ -47,8 +47,10 @@ router.route('/messages')
         message.courseCode = req.body.courseCode; // set the courseCode
         message.content = req.body.content; //set the content
         message.timeStamp = req.body.timeStamp; //set the timeStamp
+        
         //Set header to avoid CORS error
         res.setHeader("Access-Control-Allow-Origin", "*");
+        
         // save the message and check for errors
         message.save(function(err) {
             if (err) {

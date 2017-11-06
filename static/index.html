@@ -50,7 +50,7 @@
         function getMessages() {
             //Get ordered list
             const ol = document.getElementById("top20course1"); //courseCode.toString());
-            const url = 'https://lab3-klepple.c9users.io:8081/api/messages';
+            const url = 'https://lab3-klepple.c9users.io:8082/api/messages';
             fetch(url)
                 .then((resp) => resp.json())
                 .then(function(data) {
@@ -72,12 +72,16 @@
         
         //Save message entered into textarea
         function saveMessage(courseCode) {
-              fetch('https://lab3-klepple.c9users.io:8081/api/messages', {
+            let messageBody = {
+                courseCode: courseCode,
+                content: document.getElementById('course' + courseCode).value,
+              	timeStamp: Date.now()
+            }
+            var encoded = new URLSearchParams(messageBody);
+              fetch('https://lab3-klepple.c9users.io:8082/api/messages', {
               	method: 'POST',
-              	headers: {'Content-Type': 'application/json'},
-              	body: JSON.stringify({courseCode: courseCode, content: document.getElementById('course' + courseCode).value,
-              	    timeStamp: Date.now()
-              	})
+              	headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+              	body: encoded
               })
               .then(getMessages()); // load the new list
         }
