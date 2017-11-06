@@ -5,12 +5,12 @@
     </head>
 
     <body>
-        <div>
+        <div style="float:top;">
             <h1>
                 Student Message Board
             </h1>
         </div>
-        <div>
+        <div style="float:left; width: 50%">
             <h2>
                 Course 1234
             </h2>
@@ -20,7 +20,7 @@
             </textarea>    
             <button id = "course1Button">Submit</button>
         </div>
-        <div>
+        <div style="float:right;">
             <h2>
                 Course 5678
             </h2>
@@ -35,12 +35,8 @@
         
         //Get messages on load
         document.body.onload = function() {
-            getMessages();
+            var getMessEverySec = setInterval(getMessages, 1000);
         };
-        
-        /*function checkEverySecond(){
-            setInterval(getMessages(), 1000);
-        }*/
         
         //Call saveMessage when submit buttons are clicked.
         document.getElementById('course1Button').onclick = function() {saveMessage('1234')};
