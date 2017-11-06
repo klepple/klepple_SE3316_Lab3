@@ -23,7 +23,7 @@ var port = 8082; // set our port
 var router = express.Router();  // get an instance of the express Router
 
 // serve files in static' folder at root URL '/'
-app.use('/', express.static('8081'));
+app.use('/', express.static('8082'));
 
 // middleware to use for all requests
 router.use(function(req, res, next) {

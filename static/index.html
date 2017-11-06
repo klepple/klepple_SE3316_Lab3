@@ -81,7 +81,7 @@
               fetch('https://lab3-klepple.c9users.io:8082/api/messages', {
               	method: 'POST',
               	headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-              	body: encoded
+              	body: encoded,
               })
               .then(getMessages()); // load the new list
         }
