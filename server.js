@@ -16,14 +16,12 @@ var Message = require('./message.js');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = 8082; // set our port
+var port = 8081; // set our port
 
 // ------------------ ROUTES FOR OUR API ---------------------
 
 var router = express.Router();  // get an instance of the express Router
 
-// serve files in static' folder at root URL '/'
-app.use('/', express.static('8082'));
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -36,6 +34,8 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });   
 });
+// serve files in static' folder at root URL '/'
+app.use('/', express.static('8081'));
 
 // on routes that end in /messages
 router.route('/messages')
@@ -64,14 +64,13 @@ router.route('/messages')
     
     // get all the messages (accessed at GET http://localhost:8081/api/messages)
     .get(function(req, res) {
-         //Set header to avoid CORS error
+        //Set header to avoid CORS error
         res.setHeader("Access-Control-Allow-Origin", "*");
-        Message.find(function(err, messages) {
+        Message.find(function(err, messageBoard) {
             if (err) {
                 res.send(err);
             }
-            console.log("got all messages");
-            res.json(messages);
+            res.json(messageBoard);
         });
     });
     
