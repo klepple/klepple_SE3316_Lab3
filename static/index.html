@@ -4,7 +4,7 @@
         <!--<script type="text/javascript" src="script.js"></script>-->
     </head>
 
-    <body onload='getMessages()'>
+    <body>
         <div>
             <h1>
                 Student Message Board
@@ -12,29 +12,39 @@
         </div>
         <div>
             <h2>
-                Course 1
+                Course 1234
             </h2>
-            <ol id="top20course1">
+            <ol id="top20course1234">
             </ol>
-            <textarea id ="course1" rows="4" cols="50" maxlength="200">
+            <textarea id ="course1234" rows="4" cols="50" maxlength="200">
             </textarea>    
             <button id = "course1Button">Submit</button>
         </div>
         <div>
             <h2>
-                Course 2
+                Course 5678
             </h2>
-            <ol id="top20course2">
+            <ol id="top20course5678">
             </ol>
-            <textarea id="course2" rows="4" cols="50" maxlength="200">
+            <textarea id="course5678" rows="4" cols="50" maxlength="200">
             </textarea>
-            <button id = "course2Button">Submit</button>
+            <button id="course2Button">Submit</button>
         </div>
         <script>
         //JAVASCRIPT
+        
+        //Get messages on load
+        document.body.onload = function() {
+            getMessages();
+        };
+        
+        /*function checkEverySecond(){
+            setInterval(getMessages(), 1000);
+        }*/
+        
         //Call saveMessage when submit buttons are clicked.
-        document.getElementById('course1Button').onclick = function() {saveMessage('1')};
-        document.getElementById('course2Button').onclick = function() {saveMessage('2')};
+        document.getElementById('course1Button').onclick = function() {saveMessage('1234')};
+        document.getElementById('course2Button').onclick = function() {saveMessage('5678')};
         
         //Create a node element helper function
         function createNode(element) {
@@ -46,23 +56,51 @@
             return parent.appendChild(el);
         }
         
+        //Remove a childNode helper function
+        function removeChild(root) {
+            while ( root.firstChild ) {
+                root.removeChild( root.firstChild );
+            }
+        }
+        
+        //Append to list helper function
+        function appendToList(ol, li, span, childNodes){
+            if(ol.childNodes.length < 20){
+                append(li, span);
+                append(ol, li);
+            } else {
+                ol.removeChild(childNodes[0]);
+                append(li, span);
+                append(ol, li);
+            }
+        }
+        
         //Get all the messages from the database and append them to an ordered list
         function getMessages() {
             //Get ordered list
-            const ol = document.getElementById("top20course1"); //courseCode.toString());
+            const listCourse1 = document.getElementById("top20course1234");
+            const listCourse2 = document.getElementById("top20course5678");
             const url = 'https://lab3-klepple.c9users.io:8081/api/messages';
+            
+            //Clear lists
+            removeChild(listCourse1);
+            removeChild(listCourse2);
+            
             fetch(url)
                 .then((resp) => resp.json())
                 .then(function(data) {
                     console.log(data);
                     return data.map(function(message) {
-                    let li = createNode('li'),
-                    span = createNode('span');
-                    span.innerHTML = message.content;
-                    span.setAttribute("courseCode", 'ID: ${message._id}');
-                    console.log(li);
-                    append(li, span);
-                    append(ol, li);
+                        //Create node
+                        let li = createNode('li'),
+                        span = createNode('span');
+                        span.innerHTML = message.content;
+                        span.setAttribute("title", 'ID: ${message._id}');
+                        if(message.courseCode == '1234'){
+                            appendToList(listCourse1, li, span, listCourse1.childNodes);
+                        } else if(message.courseCode == '5678'){
+                            appendToList(listCourse2, li, span, listCourse2.childNodes);
+                        }
                     })
                 })
                 .catch(function(error) {
@@ -72,18 +110,19 @@
         
         //Save message entered into textarea
         function saveMessage(courseCode) {
+            //Create message
             let messageBody = {
                 courseCode: courseCode,
                 content: document.getElementById('course' + courseCode).value,
               	timeStamp: Date.now()
             }
             var encoded = new URLSearchParams(messageBody);
-              fetch('https://lab3-klepple.c9users.io:8081/api/messages', {
-              	method: 'POST',
+            
+            fetch('https://lab3-klepple.c9users.io:8081/api/messages', {
+                method: 'POST',
               	headers: {'Content-Type': 'application/x-www-form-urlencoded'},
               	body: encoded,
-              })
-              .then(getMessages()); // load the new list
+            }).then(getMessages()); // load the new list
         }
         </script>
     </body>
